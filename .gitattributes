@@ -1,0 +1,2 @@
+lua/**/*.lua binary linguist-generated=true
+deps/fennel* binary
