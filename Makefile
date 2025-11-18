@@ -2,7 +2,7 @@ ifndef VERBOSE
 .SILENT:
 endif
 
-FENNEL := ./deps/fennel-1.3.1
+FENNEL := ./deps/fennel-1.6.0
 FENNEL_OPTS := --add-macro-path 'macros/?.fnl'
 SRC_FILES := $(shell find fnl -name '*.fnl')
 OUT_FILES := $(patsubst fnl/%.fnl,lua/%.lua,$(SRC_FILES))
