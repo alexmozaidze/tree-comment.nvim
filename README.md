@@ -1,15 +1,15 @@
+[tree-sitter-comment]: https://github.com/stsewd/tree-sitter-comment
+[todo-comments.nvim]: https://github.com/folke/todo-comments.nvim
+
 <div align="center">
 
 # tree-comment.nvim
 
 ![Demo](/demo.png)
 
-Improved integration of Tree-sitter [comment](https://github.com/stsewd/tree-sitter-comment) parser. Define desired keyword highlights using a simple table. No need to tinker with query files!
+Integration with [tree-sitter-comment] parser. Define desired keyword highlights using a simple table, without ever touching any query files!
 
 </div>
-
-> [!IMPORTANT]\
-> This plugin is WIP. Expect breaking changes and lots of rebasing that will break your config.
 
 ## Installation
 
@@ -32,21 +32,53 @@ Using Lazy:
    keywords = {
       todo = { "TODO", "WIP" },
       note = { "NOTE", "INFO", "DOCS", "PERF", "TEST" },
-      warning = { "WARNING", "WARN", "SAFETY", "HACK", "XXX" },
-      error = { "FIXME", "FIX", "BUG", "ERROR" },
+      warning = { "WARN", "WARNING", "SAFETY", "HACK", "XXX" },
+      error = { "FIX", "FIXME", "BUG", "ERROR" },
    },
 }
 ```
 
-### Dynamically updating global config
-
-It is safe to re-run `setup` multiple times in order to change the global config on the fly.
+### Dynamically configure keywords
 
 Here's an example that replaces `todo` keywords and disables `error` keywords, just copy-paste it as a command and don't forget to re-open the buffer:
 ```vim
-:lua require "tree-comment".setup { keywords = { todo = { "DOIT", "JUSTDOIT" }, error = {} } }
+:lua require "tree-comment".update_keywords { todo = { "DOIT", "JUSTDOIT" }, error = {} }
 ```
 
-### Integration with [folke/todo-comments.nvim](https://github.com/folke/todo-comments.nvim)
+### Integration with [todo-comments.nvim]
 
-WIP. Will be available as a separate plugin that will integrate both of these together in a single interface.
+Below I've made a snippet you can use to integrate into [todo-comments.nvim] yourself. Just keep in mind that comments like `-- TODO(alexmozaidze): things` won't get recognized by [todo-comments.nvim] by default (See [folke/todo-comments.nvim#10](https://github.com/folke/todo-comments.nvim/issues/10)).
+
+```lua
+local tree_comment = require "tree-comment"
+
+
+local my_keywords = {
+   caution = { "CAUTION", "STOP" },
+}
+
+-- Plugins setup
+{
+   {
+      "alexmozaidze/tree-comment.nvim",
+      dependencies = "nvim-treesitter/nvim-treesitter",
+      opts = { keywords = keywords },
+   },
+   {
+      "folke/todo-comments.nvim",
+      dependencies = { "nvim-lua/plenary.nvim", "alexmozaidze/tree-comment.nvim" },
+      config = function()
+         local tree_comment = require "tree-comment"
+         local folkified_keywords, colors = tree_comment.folkify_keywords(tree_comment.get_keywords())
+
+         folkified_keywords.CAUTION.icon = "☢" -- Optional. Only for custom groups
+
+         require "todo-comments".setup {
+            keywords = folkified_keywords,
+            colors = colors,
+            highlight = { keyword = "empty", after = "" }, -- Optional. Just to make it look the same as tree-comment's highlighting
+         }
+      end,
+   },
+}
+```
