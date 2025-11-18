@@ -19,7 +19,7 @@
 ")
 
 ;; TODO: Add checks for too many and too few sub-args
-(lambda string-format [fmt sub-args]
+(λ string-format [fmt sub-args]
   "Safely interpolates a string in the format"
   (assert (= :string (type fmt)))
   (assert (= :table (type sub-args)))
@@ -31,7 +31,7 @@
                            (.. "%(" named-replace-arg ")" format-modifier)))]
     (string.gsub fmt pattern interpolator)))
 
-(lambda keyword->query [hl keywords]
+(λ keyword->query [hl keywords]
   "Convert a keyword into a query."
   (assert (= :string (type hl)))
   (assert (= :table (type keywords)))
@@ -40,7 +40,7 @@
         keywords (table.concat keywords " ")]
     (string-format template {: hl : keywords})))
 
-(lambda keywords->query [keywords]
+(λ keywords->query [keywords]
   "Convert an array of keywords into a query."
   (let [keywords (icollect [hl keyword (pairs keywords)]
                    (keyword->query hl keyword))]
@@ -48,7 +48,7 @@
 
 (local M {})
 
-(lambda M.setup [?opts]
+(λ M.setup [?opts]
   (let [{: default-opts} (require :tree-comment/_config)
         opts (or ?opts {})
         opts (vim.tbl_deep_extend :force default-opts opts)
