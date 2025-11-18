@@ -53,7 +53,7 @@ Below I've made a snippet you can use to integrate into [todo-comments.nvim] you
 local tree_comment = require "tree-comment"
 
 
-local my_keywords = {
+local keywords = {
    caution = { "CAUTION", "STOP" },
 }
 
