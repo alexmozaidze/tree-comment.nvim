@@ -50,19 +50,16 @@ Here's an example that replaces `todo` keywords and disables `error` keywords, j
 Below I've made a snippet you can use to integrate into [todo-comments.nvim] yourself. Just keep in mind that comments like `-- TODO(alexmozaidze): things` won't get recognized by [todo-comments.nvim] by default (See [folke/todo-comments.nvim#10](https://github.com/folke/todo-comments.nvim/issues/10)).
 
 ```lua
-local tree_comment = require "tree-comment"
-
-
-local keywords = {
-   caution = { "CAUTION", "STOP" },
-}
-
 -- Plugins setup
 {
    {
       "alexmozaidze/tree-comment.nvim",
       dependencies = "nvim-treesitter/nvim-treesitter",
-      opts = { keywords = keywords },
+      opts = {
+         keywords = {
+            caution = { "CAUTION", "STOP" },
+         },
+      },
    },
    {
       "folke/todo-comments.nvim",
